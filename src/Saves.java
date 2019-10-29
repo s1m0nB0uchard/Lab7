@@ -1,4 +1,15 @@
 
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.control.Label;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,7 +20,6 @@ public class Saves {
 
 
     public static String[] readDAT(String chemin) {
-
         String mois="";
         String temp= "";
         String result;
@@ -22,7 +32,6 @@ public class Saves {
                else temp+=result;
                i++;
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -36,6 +45,19 @@ public class Saves {
     }
     static List<String> getTemps(String chemin){
         return  Arrays.asList(readDAT(chemin)[1].split(", "));
+    }
+
+    static void savePNG(BorderPane bp, String path){
+        File file = new File(path);
+        WritableImage image = bp.getCenter().snapshot(new SnapshotParameters(),null);
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+        }
+        catch (IOException ex){
+            System.out.println(ex.toString());
+        }
+
+
     }
 
 }
