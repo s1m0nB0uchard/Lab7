@@ -6,6 +6,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.io.File;
 import java.util.List;
@@ -30,6 +31,7 @@ public class Main extends Application {
         MenuItem lignes = new MenuItem("Lignes");
         lignes.setOnAction((n) -> {
             try {
+                bp.setBottom(null);
                 XYChart.Series series = new XYChart.Series();
                 String chemin = afficherDossiers(window).getAbsolutePath();
                 List mois = Saves.getMois(chemin);
@@ -51,6 +53,7 @@ public class Main extends Application {
         MenuItem barres = new MenuItem("Barrres");
         barres.setOnAction((n) -> {
             try {
+                bp.setBottom(null);
                 XYChart.Series series = new XYChart.Series();
                 String chemin = afficherDossiers(window).getAbsolutePath();
                 List mois = Saves.getMois(chemin);
@@ -72,6 +75,7 @@ public class Main extends Application {
         MenuItem regions = new MenuItem("Régions");
         regions.setOnAction((n) -> {
             try {
+                bp.setBottom(null);
                 XYChart.Series series = new XYChart.Series();
                 String chemin = afficherDossiers(window).getAbsolutePath();
                 List mois = Saves.getMois(chemin);
@@ -97,25 +101,10 @@ public class Main extends Application {
         //exporter
         Menu exporter = new Menu("Exporter");
         MenuItem gif = new MenuItem("GIF");
-        gif.setOnAction((n) -> {
-
-        });
-
+        setAction(gif,"gif",bp,window);
         MenuItem PNG = new MenuItem("PNG");
-        PNG.setOnAction((n) -> {
-            if (bp.getCenter() != null) {
-                afficherSauvegarde(window,bp);
-            }
-            else {
-                Label erreur = new Label("Veuillez d'abord afficher un graphique");
-                erreur.setTextFill(Color.RED);
-                bp.setCenter(erreur);
-            }
-
-        });
-
+        setAction(PNG,"png",bp,window);
         exporter.getItems().addAll(PNG, gif);
-
 
         //affichage
         window.setTitle("Graph Viewer");
@@ -127,26 +116,49 @@ public class Main extends Application {
     }
 
     private File afficherDossiers(Stage window) {
-        FileChooser fc = new FileChooser();
-        fc.setTitle("Veuillez sélectionner un fichier");
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers texte", "*.dat"));
-        return fc.showOpenDialog(window);
+
+            FileChooser fc = new FileChooser();
+            fc.setTitle("Veuillez sélectionner un fichier");
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers texte", "*.dat"));
+            return fc.showOpenDialog(window);
+
+
     }
 
-    private void afficherSauvegarde(Stage window, BorderPane bp) {
-
+    private void afficherSauvegarde(Stage window, BorderPane bp, String format) {
        try {
+           bp.setBottom(null);
            FileChooser fc = new FileChooser();
            fc.setTitle("Veuillez sélectionner un fichier");
-           fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers image", "*.png"));
+           fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Fichiers PNG", "*.png"), new FileChooser.ExtensionFilter("Fichier GIF", "*.gif"));
            File file =fc.showSaveDialog(window);
-           Saves.savePNG(bp,file.getAbsolutePath());
+           Saves.save(bp,file.getAbsolutePath(),format);
        }
        catch (NullPointerException ex){
            Label erreur = new Label("Vous n'avez pas sélectionné de fichier");
            erreur.setTextFill(Color.RED);
-           bp.setCenter(erreur);
+           bp.setBottom(erreur);
        }
+
+    }
+    public void setAction(MenuItem item, String format,BorderPane bp, Stage window){
+
+        item.setOnAction((n)->{
+            bp.setBottom(null);
+            if (bp.getCenter() != null) {
+                afficherSauvegarde(window,bp,format);
+            }
+            else {
+                Label erreur = new Label("Veuillez d'abord afficher un graphique");
+                erreur.setTextFill(Color.RED);
+                bp.setBottom(erreur);
+            }
+        });
+
+
+
+
+
 
     }
 }
