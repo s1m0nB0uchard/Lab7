@@ -12,6 +12,8 @@ import java.io.File;
 import java.util.List;
 
 public class Main extends Application {
+    Alert alerte = new Alert(Alert.AlertType.INFORMATION);
+
 
     public static void main(String[] args) {
         launch(args);
@@ -19,6 +21,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage window) {
+
+        alerte.setTitle("Information importante");
+        alerte.setHeaderText("Erreur");
+        alerte.setContentText("Veuillez d’abord afficher un graphique avant de l’enregistrer");
+
         BorderPane bp = new BorderPane();
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
@@ -44,10 +51,7 @@ public class Main extends Application {
                 }
                 root.getData().add(series);
                 bp.setCenter(root);
-            } catch (NullPointerException ex) {
-                Label label = new Label("Aucun fichier sélectionné");
-                bp.setCenter(label);
-            }
+            } catch (NullPointerException ex) { }
         });
 
         MenuItem barres = new MenuItem("Barrres");
@@ -66,10 +70,7 @@ public class Main extends Application {
                 }
                 root.getData().add(series);
                 bp.setCenter(root);
-            } catch (NullPointerException ex) {
-                Label label = new Label("Aucun fichier sélectionné");
-                bp.setCenter(label);
-            }
+            } catch (NullPointerException ex) { }
         });
 
         MenuItem regions = new MenuItem("Régions");
@@ -88,10 +89,7 @@ public class Main extends Application {
                 }
                 root.getData().add(series);
                 bp.setCenter(root);
-            } catch (NullPointerException ex) {
-                Label label = new Label("Aucun fichier sélectionné");
-                bp.setCenter(label);
-            }
+            } catch (NullPointerException ex) { }
 
 
         });
@@ -135,9 +133,8 @@ public class Main extends Application {
            Saves.save(bp,file.getAbsolutePath(),format);
        }
        catch (NullPointerException ex){
-           Label erreur = new Label("Vous n'avez pas sélectionné de fichier");
-           erreur.setTextFill(Color.RED);
-           bp.setBottom(erreur);
+          alerte.setContentText("Vous devez choisir un fichier pour enregistrer un graphique");
+          alerte.showAndWait();
        }
 
     }
@@ -149,9 +146,7 @@ public class Main extends Application {
                 afficherSauvegarde(window,bp,format);
             }
             else {
-                Label erreur = new Label("Veuillez d'abord afficher un graphique");
-                erreur.setTextFill(Color.RED);
-                bp.setBottom(erreur);
+                alerte.showAndWait();
             }
         });
 
