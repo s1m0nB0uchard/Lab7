@@ -38,7 +38,7 @@ public class Main extends Application {
         MenuItem lignes = new MenuItem("Lignes");
         lignes.setOnAction((n) -> {
             try {
-                bp.setBottom(null);
+
                 XYChart.Series series = new XYChart.Series();
                 String chemin = afficherDossiers(window).getAbsolutePath();
                 List mois = Saves.getMois(chemin);
@@ -50,6 +50,7 @@ public class Main extends Application {
                     series.getData().add(new XYChart.Data(mois.get(i), Integer.parseInt(temperature.get(i))));
                 }
                 root.getData().add(series);
+
                 bp.setCenter(root);
             } catch (NullPointerException ex) { }
         });
@@ -57,7 +58,7 @@ public class Main extends Application {
         MenuItem barres = new MenuItem("Barrres");
         barres.setOnAction((n) -> {
             try {
-                bp.setBottom(null);
+
                 XYChart.Series series = new XYChart.Series();
                 String chemin = afficherDossiers(window).getAbsolutePath();
                 List mois = Saves.getMois(chemin);
@@ -76,7 +77,7 @@ public class Main extends Application {
         MenuItem regions = new MenuItem("Régions");
         regions.setOnAction((n) -> {
             try {
-                bp.setBottom(null);
+
                 XYChart.Series series = new XYChart.Series();
                 String chemin = afficherDossiers(window).getAbsolutePath();
                 List mois = Saves.getMois(chemin);
